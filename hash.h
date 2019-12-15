@@ -4,9 +4,6 @@
 #include <string>
 #include "list.h"
 
-int int_from_str(const std::string&);
-
-
 template <int M> int hmod(int);
 
 template <int M> int linear(int, int);
@@ -19,10 +16,9 @@ private:
 	int(*calc)(const K&);
 	int(*hash)(int);
 public:
-	chain_tab();
-	chain_tab(const chain_tab&);
+	chain_tab(int(*)(const K&), int(*)(int));
+	chain_tab(const chain_tab<K,V,N>&);
 	~chain_tab();
-
 
 	void add(const K&,const V&);
 	V search(const K&);
@@ -32,28 +28,32 @@ public:
 
 };
 
-//class open_address_tab {
-//private:
-//	static std::string DEL
-//	std::string* _keys;
-//	int* _values;
-//	int _size;
-//	int(*hash)(int);
-//	int(*probe)(int, int);
-//
-//public:
-//	open_address_tab(int);
-//	open_address_tab(const open_address_tab&);
-//	~open_address_tab();
-//
-//
-//	bool add(const std::string&, int);
-//	bool is_in(const std::string&);
-//	void del(const std::string&);
-//	int get_value(const std::string&);
-//
-//	void show();
-//};
+template <class K, class V, int N>
+class open_address_tab {
+	struct pair {
+		K key;
+		V value;
+	};
+private:
+	int fill;
+	bool* deleted;
+	pair* _tab;
+	int(*calc)(const K&);
+	int(*hash)(int);
+	int(*probe)(int, int);
+
+public:
+	open_address_tab(int(*)(const K&), int(*)(int), int(*)(int,int));
+	open_address_tab(const open_address_tab<K,V,N>&);
+	~open_address_tab();
+
+
+	bool add(const K&, const V&);
+	V search(const K&);
+	void del(const K&);
+
+	void show();
+};
 
 #include "hash.tpp"
 #endif
